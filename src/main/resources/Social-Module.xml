@@ -1,0 +1,61 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+
+	<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+
+		<property name="location">
+			<value>application.properties</value>
+		</property>
+	</bean>
+
+	<bean id="connectionFactoryLocator"
+		class="org.springframework.social.connect.support.ConnectionFactoryRegistry">
+		<property name="connectionFactories">
+			<list>
+
+				<!-- Twitter Connection Factory -->
+				<bean
+					class="org.springframework.social.twitter.connect.TwitterConnectionFactory">
+					<constructor-arg value="${twitter.consumerKey}" />
+					<constructor-arg value="${twitter.consumerSecret}" />
+				</bean>
+
+				<!-- Facebook Connection Factory -->
+				<bean
+					class="org.springframework.social.facebook.connect.FacebookConnectionFactory">
+					<constructor-arg value="${facebook.clientId}" />
+					<constructor-arg value="${facebook.clientSecret}" />
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="twitterInstance"
+		class="org.springframework.social.twitter.api.impl.TwitterTemplate">
+		<constructor-arg index="0" value="${twitter.consumerKey}" />
+		<constructor-arg index="1" value="${twitter.consumerSecret}" />
+		<constructor-arg index="2" value="${twitter.accessToken}" />
+		<constructor-arg index="3" value="${twitter.accessTokenSecret}" />
+	</bean>
+
+	<bean id="twitterOpr" class="com.twitter.ibeat.iBeatSocial.TwitterOperation">
+		<property name="twitterObj">
+			<ref bean="twitterInstance" />
+		</property>
+	</bean>
+
+	<bean id="facebookIstance"
+		class="org.springframework.social.facebook.api.impl.FacebookTemplate">
+		<constructor-arg index="0" value="${facebook.userToken}" />
+	</bean>
+
+	<bean id="facebookOpr" class="com.twitter.ibeat.iBeatSocial.FacebookOperation">
+		<property name="facebook">
+			<ref bean="facebookIstance" />
+		</property>
+	</bean>
+
+</beans>
